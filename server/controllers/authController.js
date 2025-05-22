@@ -2,6 +2,7 @@ import userModel from "../models/userModel.js"
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import transporter from "../config/nodemailer.js";
+import { OTP_EMAIL_TEMPLATE } from "../config/emailTemplate.js";
 
 export const register = async (req, res) =>  {
     /**
@@ -113,7 +114,8 @@ export const verifyOtp = async (req,res) =>{
             from: process.env.SENDER_EMAIL,
             to: user.email,
             subject: `Your otp is: ${ otp } 🔐`,
-            text: `Hello ${user.name} here is your ${otp}. You can use it to verify your account 🤗`,
+            // text: `Hello ${user.name} here is your ${otp}. You can use it to verify your account 🤗`,
+            html: OTP_EMAIL_TEMPLATE.replace("{{otp}}", otp )
         }
         await transporter.sendMail( mailOptions );
         return res.json({success:true, message:"OTP succesfully send!", otp:otp, user:user })

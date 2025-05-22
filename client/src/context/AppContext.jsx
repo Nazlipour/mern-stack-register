@@ -39,6 +39,20 @@ export const AppContextProvider = (props) => {
     }
   }
 
+    const sendVerifyOtp = async () => {
+      try {
+        axios.defaults.withCredentials=true
+        const { data } = await axios.post(`${backendUrl}/api/auth/send-verify-otp`) 
+        if(data.success){
+          toast.success(data.message)
+        }else{
+          toast.error(data.message)
+        }
+      } catch (error) {
+        toast.error(error.message)
+      }
+  }
+
   useEffect(()=> {
     getAuthState()
   },[])
@@ -47,7 +61,8 @@ export const AppContextProvider = (props) => {
     backendUrl,
     isLoggedIn, setIsLoggedIn,
     userData, setUserData,
-    getUserData
+    getUserData,
+    sendVerifyOtp
   }
   return (
     <AppContext.Provider value={value}>{props.children}</AppContext.Provider>
